@@ -1,0 +1,136 @@
+CREATE DATABASE hotelaria CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE hotelaria;
+
+
+CREATE TABLE hero(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    subtitulo VARCHAR(255) NOT NULL,
+    imagem VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE sobre (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(255) DEFAULT 'Sobre Nós',
+    texto TEXT NOT NULL,
+    imagem VARCHAR(255) NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE equipe (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cargo VARCHAR(100) NOT NULL,
+    facebook VARCHAR(255),
+    twitter VARCHAR(255),
+    linkedin VARCHAR(255),
+    imagem VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE faq (
+    id_faq INT AUTO_INCREMENT PRIMARY KEY,
+    pergunta VARCHAR(255) NOT NULL,
+    resposta TEXT NOT NULL,
+    imagem VARCHAR(255) DEFAULT NULL,
+    ordem INT DEFAULT 0,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE contato (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) DEFAULT NULL,
+    email VARCHAR(150) DEFAULT NULL,
+    mensagem TEXT DEFAULT NULL,
+    data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE imagem(
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    imagem VARCHAR(255) DEFAULT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+-- Tabela de usuários
+CREATE TABLE usuarios (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20),
+    tipo ENUM('user','admin') DEFAULT 'user',
+    foto VARCHAR(255) DEFAULT 'default.jpg',
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- Tabela de quartos
+CREATE TABLE quartos (
+    id_quarto INT AUTO_INCREMENT PRIMARY KEY,
+    numero_quarto VARCHAR(10) NOT NULL,
+    tipo_quarto VARCHAR(50) NOT NULL,
+    preco_diaria DECIMAL(10,2) NOT NULL,
+    descricao TEXT,
+    imagem VARCHAR(255),
+    status ENUM('disponivel','ocupado','manutencao') DEFAULT 'disponivel'
+);
+
+-- Tabela de reservas
+CREATE TABLE reservas (
+    id_reserva INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_quarto INT NOT NULL,
+    data_checkin DATE NOT NULL,
+    data_checkout DATE NOT NULL,
+    status ENUM('pendente','confirmada','cancelada') DEFAULT 'pendente',
+    criada_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_quarto) REFERENCES quartos(id_quarto) ON DELETE CASCADE
+);
+
+
+
+
+INSERT INTO hero (titulo, subtitulo, imagem)
+VALUES 
+('Bem-vindo ao Nosso Hotel', 'Experiência única e conforto incomparável', 'hotel.jpg');
+
+INSERT INTO sobre (texto, imagem)
+VALUES (
+'Descubra o refúgio perfeito para suas férias ou viagens de negócios no Hotel Paraíso. Localizado em um ambiente tranquilo e cercado por belezas naturais, nosso hotel combina conforto, elegância e atendimento personalizado para tornar sua estadia inesquecível.  
+
+Desfrute de quartos modernos e aconchegantes, equipados com todas as comodidades que você precisa para relaxar e se sentir em casa. Aproveite nossas instalações de lazer, que incluem piscina, spa e restaurante com pratos deliciosos preparados com ingredientes frescos e locais.  
+
+No Hotel Paraíso, cada detalhe é pensado para oferecer momentos de prazer, descanso e bem-estar. Seja para uma escapada romântica, férias em família ou uma viagem de negócios, aqui você encontrará o equilíbrio perfeito entre sofisticação e hospitalidade.  
+
+Venha viver experiências únicas e tornar suas memórias ainda mais especiais no Hotel Paraíso.',
+'contato.jpg'
+);
+
+INSERT INTO equipe (nome, cargo, facebook, twitter, linkedin, imagem)
+VALUES 
+('Ana Silva', 'Gerente Geral', 'https://facebook.com', 'https://twitter.com', 'https://linkedin.com/in', 'Ana Silva.jpg'),
+('Carlos Pereira', 'Chef Executivo ', 'https://facebook.com', 'https://twitter.com', 'https://linkedin.com/in', 'Carlos Pereira.jpg'),
+('Mariana Souza', 'Gerente de Hospedagem', 'https://facebook.com', 'https://twitter.com', 'https://linkedin.com/in', 'Mariana Souza.jpg');
+
+
+INSERT INTO faq (pergunta, resposta, imagem, ordem)
+VALUES
+('Quais são os horários de check-in e check-out?', 'O check-in é a partir das 14h e o check-out deve ser realizado até às 12h. Garantimos flexibilidade mediante disponibilidade.', NULL, 1),
+('O hotel aceita animais de estimação?', 'Sim! Aceitamos animais de estimação de pequeno porte, mediante aviso prévio e algumas regras de convivência.', NULL, 2),
+('O café da manhã está incluído na diária?', 'Sim, o café da manhã está incluso em todas as diárias e é servido no restaurante do hotel, das 7h às 10h.', NULL, 3),
+('Há estacionamento disponível?', 'O hotel oferece estacionamento gratuito para todos os hóspedes, com vagas limitadas por ordem de chegada.', NULL, 4);
+
+
+INSERT INTO imagem (imagem) 
+VALUES
+('sobre.jpg');
+
+INSERT INTO contato (nome, email, mensagem)
+VALUES
+('João Oliveira', 'joao.oliveira@email.com', 'Olá, gostaria de saber sobre a disponibilidade de quartos para o próximo feriado.'),
+('Maria Santos', 'maria.santos@email.com', 'Gostaria de informações sobre pacotes promocionais para famílias.'),
+('Pedro Lima', 'pedro.lima@email.com', 'Olá, existe serviço de transporte do aeroporto para o hotel?'),
+('Ana Costa', 'ana.costa@email.com', 'Quais são as opções de lazer disponíveis para crianças?');
