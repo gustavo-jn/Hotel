@@ -1,0 +1,16 @@
+# Database dumps and local database files
+*.sql
+*.db
+*.sqlite
+*.sqlite3
+
+# Common local backup folders
+dump/
+backup/
+
+# Local environment files
+.env
+.env.*
+
+# Local DB credentials (do not commit)
+config/conexao.local.php
